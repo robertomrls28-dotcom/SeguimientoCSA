@@ -1,0 +1,66 @@
+@model List<Proveedor>
+
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h5 class="mb-0">Directorio de Proveedores</h5>
+        <small class="text-muted">@Model.Count proveedores registrados</small>
+    </div>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nuevo Proveedor</a>
+</div>
+
+<div class="row g-3">
+    @foreach (var prov in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">
+                                <a asp-action="Details" asp-route-id="@prov.Id" class="text-decoration-none">@prov.Nombre</a>
+                            </h6>
+                            <span class="badge bg-primary">@(prov.Especialidad ?? "General")</span>
+                            @if (prov.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="mt-2 small">
+                        @if (!string.IsNullOrEmpty(prov.Contacto))
+                        {
+                            <div><i class="bi bi-person"></i> @prov.Contacto</div>
+                        }
+                        @if (!string.IsNullOrEmpty(prov.Telefono))
+                        {
+                            <div><i class="bi bi-telephone"></i> @prov.Telefono</div>
+                        }
+                        @if (!string.IsNullOrEmpty(prov.Email))
+                        {
+                            <div><i class="bi bi-envelope"></i> @prov.Email</div>
+                        }
+                    </div>
+                    <div class="mt-2 d-flex gap-2 small text-muted">
+                        <span><i class="bi bi-list-check"></i> @prov.Actividades.Count actividades</span>
+                        <span><i class="bi bi-cash-stack"></i> @prov.Pagos.Sum(p => p.Monto).ToString("C")</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent d-flex gap-1">
+                    <a asp-action="Edit" asp-route-id="@prov.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i> Editar</a>
+                    <form asp-action="Delete" asp-route-id="@prov.Id" method="post" onsubmit="return confirm('¿Eliminar este proveedor?');">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

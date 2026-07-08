@@ -1,0 +1,78 @@
+@model MiembroComite
+
+@{
+    var isEdit = Model?.Id > 0;
+    ViewData["Title"] = ViewData["Title"] ?? (isEdit ? "Editar Miembro" : "Nuevo Miembro del Comité");
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-@(isEdit ? "pencil" : "plus-circle")"></i> @ViewData["Title"]
+            </div>
+            <div class="card-body">
+                <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+                    @Html.AntiForgeryToken()
+                    @if (isEdit)
+                    {
+                        <input type="hidden" asp-for="Id" />
+                    }
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Nombre" class="form-label">Nombre Completo *</label>
+                            <input asp-for="Nombre" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Cargo" class="form-label">Cargo *</label>
+                            <select asp-for="Cargo" class="form-select" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="Presidente del Comité">Presidente del Comité</option>
+                                <option value="Secretaria del Comité">Secretaria del Comité</option>
+                                <option value="Tesorero del Comité">Tesorero del Comité</option>
+                                <option value="Vocal">Vocal</option>
+                                <option value="Suplente">Suplente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="NumeroDepto" class="form-label">Número de Depto.</label>
+                            <input asp-for="NumeroDepto" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Telefono" class="form-label">Teléfono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FechaInicio" class="form-label">Fecha de Inicio *</label>
+                            <input asp-for="FechaInicio" type="date" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FechaFin" class="form-label">Fecha de Fin</label>
+                            <input asp-for="FechaFin" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mt-3">
+                                <input asp-for="Activo" class="form-check-input" />
+                                <label asp-for="Activo" class="form-check-label">Miembro Activo</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Notas" class="form-label">Notas</label>
+                            <textarea asp-for="Notas" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> @(isEdit ? "Guardar Cambios" : "Registrar Miembro")</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

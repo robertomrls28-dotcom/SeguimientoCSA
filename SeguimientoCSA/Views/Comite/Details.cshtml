@@ -1,0 +1,106 @@
+@model MiembroComite
+
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-badge"></i> Información</span>
+                <div class="btn-group btn-group-sm">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
+                </div>
+            </div>
+            <div class="card-body text-center">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:64px;height:64px;font-size:1.5rem;">
+                    @Model.Nombre[0]
+                </div>
+                <h5>@Model.Nombre</h5>
+                <span class="badge bg-dark">@Model.Cargo</span>
+                @if (Model.Activo)
+                {
+                    <span class="badge bg-success">Activo</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Inactivo</span>
+                }
+
+                <hr />
+                <div class="text-start small">
+                    <div class="mb-1"><i class="bi bi-building"></i> <strong>Depto:</strong> @(Model.NumeroDepto ?? "—")</div>
+                    <div class="mb-1"><i class="bi bi-telephone"></i> <strong>Tel:</strong> @(Model.Telefono ?? "—")</div>
+                    <div class="mb-1"><i class="bi bi-envelope"></i> <strong>Email:</strong> @(Model.Email ?? "—")</div>
+                    <div class="mb-1"><i class="bi bi-calendar3"></i> <strong>Inicio:</strong> @Model.FechaInicio.ToString("dd/MM/yyyy")</div>
+                    <div><i class="bi bi-calendar3"></i> <strong>Fin:</strong> @(Model.FechaFin?.ToString("dd/MM/yyyy") ?? "Vigente")</div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Notas))
+                {
+                    <hr />
+                    <div class="text-start small"><strong>Notas:</strong><br />@Model.Notas</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-list-check"></i> Actividades Supervisadas (@Model.ActividadesSupervisadas.Count)
+            </div>
+            <div class="card-body p-0">
+                @if (Model.ActividadesSupervisadas.Any())
+                {
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr><th>Título</th><th>Categoría</th><th>Estado</th><th>Proveedor</th><th>Costo Est.</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var act in Model.ActividadesSupervisadas)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Actividades" asp-action="Details" asp-route-id="@act.Id" class="text-decoration-none fw-semibold">
+                                            @act.Titulo
+                                        </a>
+                                    </td>
+                                    <td><span class="badge" style="background-color:@act.Categoria.ColorHex;">@act.Categoria.Nombre</span></td>
+                                    <td>
+                                        @switch (act.Estado)
+                                        {
+                                            case EstadoActividad.Pendiente:
+                                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                                break;
+                                            case EstadoActividad.EnProgreso:
+                                                <span class="badge bg-info">En Progreso</span>
+                                                break;
+                                            case EstadoActividad.Completada:
+                                                <span class="badge bg-success">Completada</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-danger">Cancelada</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td class="small">@(act.Proveedor?.Nombre ?? "—")</td>
+                                    <td>@(act.CostoEstimado?.ToString("C") ?? "—")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size:2rem;"></i>
+                        <p>Sin actividades supervisadas.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
