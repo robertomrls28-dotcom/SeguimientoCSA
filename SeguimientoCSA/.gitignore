@@ -6,8 +6,7 @@ obj/
 *.userosscache
 *.sln.docstates
 
-## Base de datos local
-*.db
+## Base de datos local (archivos temporales de SQLite)
 *.db-shm
 *.db-wal
 
